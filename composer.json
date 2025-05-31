@@ -1,0 +1,9 @@
+{
+    "name": "alexc/proyecto-agustin",
+    "autoload": {
+        "psr-4": {
+            "Alexc\\ProyectoAgustin\\": "app/"
+        }
+    },
+    "require": {}
+}
