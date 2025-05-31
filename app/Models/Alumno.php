@@ -23,9 +23,12 @@ class Alumno
     {
         try {
             $db = Database::getConnection();
-            $stmt = $db->prepare("INSERT INTO alumnos (matricula, nombre, correo) VALUES (:matricula, :nombre, :correo)");
+            $ultimoId = $db->query("SELECT MAX(id) FROM encargados")->fetchColumn();
+            $nuevoId = $ultimoId ? $ultimoId + 1 : 1;
+            $stmt = $db->prepare("INSERT INTO alumnos (id, numControl, nombre, correo) VALUES (:id, :numControl, :nombre, :correo)");
             $stmt->execute([
-                ':matricula' => $data['matricula'],
+                ':id' => $nuevoId,
+                ':numControl' => $data['numControl'],
                 ':nombre' => $data['nombre'],
                 ':correo' => $data['correo'],
             ]);

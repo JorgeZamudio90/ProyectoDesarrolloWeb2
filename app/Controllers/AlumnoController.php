@@ -40,10 +40,10 @@ class AlumnoController extends BaseController
     //Mostrar alumno por id
     public function show($id)
     {
-        $encargado = Alumno::obtenerPorId($id);
-        if (!$encargado) {
-            return $this->json(['error' => 'Encargado no encontrado'], 404);
+        $alumno = Alumno::obtenerPorId($id);
+        if (!$alumno) {
+            return $this->json(['error' => 'Alumno no encontrado'], 404);
         }
-        return $this->json($encargado);
+        return $this->json($alumno);
     }
 }
