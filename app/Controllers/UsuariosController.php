@@ -17,9 +17,9 @@ class UsuariosController extends BaseController
 
     public function post($peticion)
     {
-        if ($peticion == 'registro') {
+        if ($peticion[0] == 'registro') {
             return self::registrar();
-        } else if ($peticion == 'login') {
+        } else if ($peticion[0] == 'login') {
             return self::loguear();
         } else {
             self::respuestaJson(2, "URL mal formada", 400);
