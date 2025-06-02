@@ -5,6 +5,7 @@ namespace Alexc\ProyectoAgustin\Models;
 use PDO;
 use PDOException;
 use Alexc\ProyectoAgustin\Core\Database;
+use Alexc\ProyectoAgustin\Core\Tokenizer;
 
 class Alumno
 {
@@ -23,8 +24,7 @@ class Alumno
     {
         try {
             $db = Database::getConnection();
-            $ultimoId = $db->query("SELECT MAX(id) FROM encargados")->fetchColumn();
-            $nuevoId = $ultimoId ? $ultimoId + 1 : 1;
+            $nuevoId = Tokenizer::generarClaveApi();
             $stmt = $db->prepare("INSERT INTO alumnos (id, numControl, nombre, correo) VALUES (:id, :numControl, :nombre, :correo)");
             $stmt->execute([
                 ':id' => $nuevoId,
@@ -32,7 +32,10 @@ class Alumno
                 ':nombre' => $data['nombre'],
                 ':correo' => $data['correo'],
             ]);
-            return ['success' => true, 'id' => $db->lastInsertId()];
+
+            // Obtener el alumno recién creado
+             $alumno=self::obtenerPorId($nuevoId);
+            return ['success' => true, 'alumno' => $alumno];
         } catch (PDOException $e) {
             return ['error' => $e->getMessage()];
         }
@@ -71,8 +74,13 @@ class Alumno
             $sql = 'UPDATE alumnos SET ' . implode(', ', $campos) . ' WHERE id = :id';
             $stmt = $db->prepare($sql);
             $stmt->execute($params);
+            if ($stmt->rowCount() === 0) {
+                return ['error' => 'No se encontró el alumno o no se modificó ningún dato'];
+            }
 
-            return ['success' => true];
+                // Obtener el alumno recién creado
+            $alumno=self::obtenerPorId($id);
+        return ['success' => true, 'alumno' => $alumno];
         } catch (PDOException $e) {
             return ['error' => $e->getMessage()];
         }
@@ -85,6 +93,10 @@ class Alumno
             $db = Database::getConnection();
             $stmt = $db->prepare("DELETE FROM alumnos WHERE id = :id");
             $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() === 0) {
+                return ['error' => 'Alumno no encontrado'];
+            }
+
             return ['success' => true];
         } catch (PDOException $e) {
             return ['error' => $e->getMessage()];
@@ -97,6 +109,7 @@ class Alumno
             $db = Database::getConnection();
             $stmt = $db->prepare("SELECT * FROM alumnos WHERE id = :id");
             $stmt->execute([':id' => $id]);
+            if($stmt->rowCount()===0)return null;
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return ['error' => $e->getMessage()];

@@ -3,7 +3,7 @@
         'name' => 'alexc/proyecto-agustin',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'fa9de7573e5c4eff4580d8ef5072d274f6371f83',
+        'reference' => '18e29aedb39724ab2aa5ab1a5b94115ceafcabb6',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'alexc/proyecto-agustin' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'fa9de7573e5c4eff4580d8ef5072d274f6371f83',
+            'reference' => '18e29aedb39724ab2aa5ab1a5b94115ceafcabb6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

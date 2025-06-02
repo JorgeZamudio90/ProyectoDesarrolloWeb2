@@ -24,19 +24,30 @@ $url = filter_var($url, FILTER_SANITIZE_URL);
 $urlParts = explode('/', $url);
 
 $controllerName = !empty($urlParts[0]) ? ucfirst($urlParts[0]) . 'Controller' : 'HomeController';
-$methodName = $urlParts[1] ?? 'index';
-$params = array_slice($urlParts, 2);
+$methodHttp = strtolower($_SERVER['REQUEST_METHOD']);
+$params = array_slice($urlParts, 1);
 
 // Nombre completo del controlador con namespace
 $controllerClass = "Alexc\\ProyectoAgustin\\Controllers\\$controllerName";
 
 if (class_exists($controllerClass)) {
     $controller = new $controllerClass();
-    if (method_exists($controller, $methodName)) {
-        call_user_func_array([$controller, $methodName], $params);
+        switch ($methodHttp) {
+            case 'get':
+            case 'post':
+            case 'put':
+            case 'delete':
+                if (method_exists($controller, $methodHttp)) {
+                    call_user_func(array($controller, $methodHttp), $params ?? null);
+                        exit;
+                }
+            default:
+            http_response_code(405);
+            echo "Método '$methodHttp' no encontrado en '$controllerClass'.";
+            exit;
+        }
     } else {
-        echo "Método '$methodName' no encontrado en '$controllerClass'";
+        http_response_code(406);
+        echo "Controlador '$controllerClass' no encontrado.";
+        exit;
     }
-} else {
-    echo "Controlador '$controllerClass' no encontrado.";
-}
