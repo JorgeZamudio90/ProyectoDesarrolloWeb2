@@ -16,7 +16,7 @@ class EventoController extends BaseController
         }
         if(!empty($params) && isset($params[0])){
 
-            if ($params[1] === 'encargado') {
+            if (isset($params[1]) && $params[1] === 'encargado') {
                 return $this->eventosPorEncargado($params[0]);
             }else{
                 return $this->show($params[0]);

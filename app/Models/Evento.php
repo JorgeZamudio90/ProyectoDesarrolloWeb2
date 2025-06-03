@@ -144,7 +144,7 @@ class Evento
     {
         try {
             $db   = Database::getConnection();
-            $stmt = $db->prepare("SELECT * FROM eventos WHERE encargadoId = :encargadoId");
+            $stmt = $db->prepare("SELECT * FROM eventos WHERE encargado_id = :encargadoId");
             $stmt->execute([':encargadoId' => $encargadoId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -157,6 +157,24 @@ class Evento
         try {
             $db   = Database::getConnection();
             $stmt = $db->prepare("SELECT * FROM eventos WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+
+            if ($stmt->rowCount() === 0) {
+                return null;
+            }
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public static function obtenerEncargadoEventoId($id)
+    {
+        try {
+            $db   = Database::getConnection();
+            $stmt = $db->prepare("SELECT e.*, ev.titulo FROM encargados AS e 
+                                    INNER JOIN eventos AS ev ON e.id = ev.encargado_id
+                                    WHERE ev.id= :id");
             $stmt->execute([':id' => $id]);
 
             if ($stmt->rowCount() === 0) {

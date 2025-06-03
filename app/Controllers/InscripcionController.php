@@ -16,9 +16,9 @@ class InscripcionController extends BaseController
         }
         if(!empty($params) && isset($params[0])){
 
-            if ($params[1]=== 'evento') {
+            if (isset($params[1]) &&$params[1]=== 'evento') {
                 return $this->inscripcionesPorEvento($params[0]);
-            }elseif ($params[1] === 'alumno') {
+            }elseif (isset($params[1]) &&$params[1] === 'alumno') {
                 return $this->inscripcionesPorAlumno($params[0]);
             }else{
                 return self::show($params[0]);
